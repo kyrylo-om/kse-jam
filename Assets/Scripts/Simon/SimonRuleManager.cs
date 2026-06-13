@@ -7,6 +7,7 @@ public class SimonRuleManager : MonoBehaviour
     public static SimonRuleManager Instance { get; private set; }
 
     private readonly List<ISimonEffect> activeRules = new List<ISimonEffect>();
+    private readonly List<RuleType> activeRuleTypes = new List<RuleType>();
     private InputAction resetAction;
 
     private void Awake()
@@ -44,12 +45,25 @@ public class SimonRuleManager : MonoBehaviour
 
     public void ApplyRule(RuleDefinition ruleDef)
     {
+        // Don't apply if this rule type is already active
+        if (activeRuleTypes.Contains(ruleDef.type))
+        {
+            Debug.Log($"[SimonRuleManager] Rule '{ruleDef.type}' already active — skipping duplicate");
+            return;
+        }
+
         ISimonEffect effect = CreateEffect(ruleDef);
         if (effect == null) return;
 
         effect.Apply();
         activeRules.Add(effect);
+        activeRuleTypes.Add(ruleDef.type);
         Debug.Log($"[SimonRuleManager] Applied rule: {ruleDef.type} (value: {ruleDef.floatValue})");
+    }
+
+    public bool IsRuleActive(RuleType type)
+    {
+        return activeRuleTypes.Contains(type);
     }
 
     public void ResetAllRules()
@@ -62,6 +76,7 @@ public class SimonRuleManager : MonoBehaviour
             effect.Reset();
         }
         activeRules.Clear();
+        activeRuleTypes.Clear();
     }
 
     private ISimonEffect CreateEffect(RuleDefinition ruleDef)

@@ -19,6 +19,7 @@ public class DialogueController : MonoBehaviour
 
     private List<GameObject> activeLetters = new List<GameObject>();
     private Coroutine typingCoroutine;
+    private string currentDisplayedText = "";
 
     private void Start()
     {
@@ -47,7 +48,23 @@ public class DialogueController : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
 
+        currentDisplayedText = text;
         typingCoroutine = StartCoroutine(TypeText(text, onComplete));
+    }
+
+    /// <summary>
+    /// Appends text to the currently displayed text without clearing existing letters.
+    /// The new letters will type out after the existing ones.
+    /// </summary>
+    public void AppendText(string extraText, System.Action onComplete = null)
+    {
+        if (typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+        }
+
+        currentDisplayedText += extraText;
+        typingCoroutine = StartCoroutine(TypeTextFromIndex(currentDisplayedText, currentDisplayedText.Length - extraText.Length, onComplete));
     }
 
     private IEnumerator TypeText(string text, System.Action onComplete)
@@ -55,6 +72,20 @@ public class DialogueController : MonoBehaviour
         // Clear active letters
         ClearLetters();
 
+        yield return TypeLettersFrom(text, 0, onComplete);
+    }
+
+    /// <summary>
+    /// Types out only the new portion of text starting from startIndex.
+    /// Assumes activeLetters already contains letters for indices [0, startIndex).
+    /// </summary>
+    private IEnumerator TypeTextFromIndex(string fullText, int startIndex, System.Action onComplete)
+    {
+        yield return TypeLettersFrom(fullText, startIndex, onComplete);
+    }
+
+    private IEnumerator TypeLettersFrom(string text, int startIndex, System.Action onComplete)
+    {
         if (typesetterText != null && letterPrefab != null)
         {
             // Update typesetter text and compute its mesh layout
@@ -63,7 +94,7 @@ public class DialogueController : MonoBehaviour
 
             TMP_TextInfo textInfo = typesetterText.textInfo;
 
-            for (int i = 0; i < textInfo.characterCount; i++)
+            for (int i = startIndex; i < textInfo.characterCount; i++)
             {
                 TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
 

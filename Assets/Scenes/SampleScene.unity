@@ -600,7 +600,7 @@ MonoBehaviour:
   lettersContainer: {fileID: 414413007}
   continuePrompt: {fileID: 0}
   letterPrefab: {fileID: 3567877306898936945, guid: 45929e7d672e0aa49b0d28f02b01abae, type: 3}
-  letterDelay: 0.1
+  letterDelay: 0.04
   appearAnimationTrigger: Appear
 --- !u!224 &279369425
 RectTransform:
@@ -2721,7 +2721,7 @@ MonoBehaviour:
   displayInterval: 10
   pickRandomLine: 1
   simonSaysPrefix: 'Simon says... '
-  delayAfterSimonSays: 0.5
+  delayAfterSimonSays: 1
   lines:
   - text: FUCK YOU!
     type: 2
@@ -2755,7 +2755,7 @@ MonoBehaviour:
     failureMessage: 
     rule:
       type: 2
-      floatValue: 2
+      floatValue: 0.5
     onTriggered:
       m_PersistentCalls:
         m_Calls: []

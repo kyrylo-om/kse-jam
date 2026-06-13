@@ -47,28 +47,56 @@ public class SimonController : MonoBehaviour
         {
             if (lines.Count > 0 && dialogueController != null)
             {
-                // Determine line index
+                // Determine line index — skip rule lines whose rule type is already active
+                SimonLine currentLine;
                 if (pickRandomLine)
                 {
-                    currentLineIndex = Random.Range(0, lines.Count);
+                    // Build a list of eligible lines (skip active rules)
+                    List<SimonLine> eligible = new List<SimonLine>();
+                    foreach (var line in lines)
+                    {
+                        if (line.type == SimonLineType.Rule && ruleManager != null && ruleManager.IsRuleActive(line.rule.type))
+                            continue;
+                        eligible.Add(line);
+                    }
+
+                    if (eligible.Count == 0)
+                    {
+                        // Fallback: nothing eligible, just pick from all lines
+                        currentLine = lines[Random.Range(0, lines.Count)];
+                    }
+                    else
+                    {
+                        currentLine = eligible[Random.Range(0, eligible.Count)];
+                    }
                 }
                 else
                 {
-                    currentLineIndex = currentLineIndex % lines.Count;
+                    // Sequential mode — skip lines whose rule type is already active
+                    int attempts = 0;
+                    do
+                    {
+                        currentLineIndex = currentLineIndex % lines.Count;
+                        currentLine = lines[currentLineIndex];
+                        bool isActiveRule = currentLine.type == SimonLineType.Rule
+                                            && ruleManager != null
+                                            && ruleManager.IsRuleActive(currentLine.rule.type);
+                        if (!isActiveRule) break;
+                        currentLineIndex++;
+                        attempts++;
+                    } while (attempts < lines.Count);
                 }
 
-                SimonLine currentLine = lines[currentLineIndex];
-
-                // Phase 1: "Simon says... "
+                // Phase 1: Type "Simon says... "
                 bool simonSaysDone = false;
                 dialogueController.ShowText(simonSaysPrefix, () => simonSaysDone = true);
                 yield return new WaitUntil(() => simonSaysDone);
 
                 yield return new WaitForSeconds(delayAfterSimonSays);
 
-                // Phase 2: The actual line content
+                // Phase 2: Append the line text (letters stay on screen)
                 bool lineDone = false;
-                dialogueController.ShowText(currentLine.text, () => lineDone = true);
+                dialogueController.AppendText(currentLine.text, () => lineDone = true);
                 yield return new WaitUntil(() => lineDone);
 
                 // Wait for the configured delay before executing
