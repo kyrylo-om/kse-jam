@@ -6,14 +6,19 @@ using UnityEngine.InputSystem;
 public class CharacterController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float _moveSpeed = 8f;
+    public float moveSpeed
+    {
+        get => _moveSpeed;
+        set => _moveSpeed = value;
+    }
     [SerializeField] private float acceleration = 30f;
     [SerializeField] private float deceleration = 25f;
     [SerializeField] private float airControl = 0.6f;
     [SerializeField] private float rotationSpeed = 720f;
 
     [Header("Jump & Dive Settings")]
-    [SerializeField] private float jumpForce = 10f;
+    public float jumpForce = 10f;
     [SerializeField] private float diveForwardForce = 12f;
     [SerializeField] private float diveUpwardForce = 4f;
     [SerializeField] private float diveCooldown = 1.5f;
@@ -225,6 +230,13 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    public void ForceJump()
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z); // Clear vertical velocity first
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+        ApplyStretch(1.35f); // Stretch up on jump
+    }
+
     private void HandleJumpAndDive()
     {
         if (jumpRequested)
@@ -252,7 +264,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void TriggerTumble()
+    public void TriggerTumble()
     {
         isTumbled = true;
         tumbleTimer = 0f;
