@@ -2223,6 +2223,7 @@ MonoBehaviour:
   tiltAngleMax: 15
   tiltSpeed: 10
   squashStretchSpeed: 12
+  isGrounded: 0
 --- !u!136 &1643942869
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2747,12 +2748,36 @@ MonoBehaviour:
   dialogueController: {fileID: 279369424}
   ruleManager: {fileID: 1826226373}
   actionValidator: {fileID: 0}
-  displayInterval: 10
-  pickRandomLine: 1
+  displayInterval: 5
+  pickRandomLine: 0
   simonSaysPrefix: 'Simon says... '
   delayAfterSimonSays: 1
   lines:
-  - text: FUCK YOU!
+  - text: MAN THE GRAPHICS IN THIS GAME ARE REALLY BAD
+    type: 1
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 5
+      floatValue: 0.3
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: JUMP! JUMP! JUMP!
+    type: 1
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 0
+      floatValue: 0
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: HA!
     type: 2
     delayBeforeAction: 0
     actionTimeLimit: 0
@@ -2776,27 +2801,75 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - text: this is fucking stupid
-    type: 1
-    delayBeforeAction: 0
-    actionTimeLimit: 0
-    requiredInputAction: 
-    failureMessage: 
-    rule:
-      type: 2
-      floatValue: 0.5
-    onTriggered:
-      m_PersistentCalls:
-        m_Calls: []
-  - text: JUMP, BITCH!!!! JUMP AS HIGH AS YOU CAN!!!!!!!
-    type: 1
+  - text: 1 MILLION BALLS!!!
+    type: 2
     delayBeforeAction: 0
     actionTimeLimit: 0
     requiredInputAction: 
     failureMessage: 
     rule:
       type: 0
-      floatValue: 1.5
+      floatValue: 0
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: YOU'RE SONIC
+    type: 1
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 1
+      floatValue: 2
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: BRO YOU HAVE A POTATO PC
+    type: 1
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 3
+      floatValue: 15
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: idk. not feeling like it.
+    type: 2
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 0
+      floatValue: 0
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: FRICTION? NEVER HEARD OF IT.
+    type: 1
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 4
+      floatValue: 0
+    onTriggered:
+      m_PersistentCalls:
+        m_Calls: []
+  - text: WHOOPS, DROPPED SOMETHING!
+    type: 2
+    delayBeforeAction: 0
+    actionTimeLimit: 0
+    requiredInputAction: 
+    failureMessage: 
+    rule:
+      type: 0
+      floatValue: 0
     onTriggered:
       m_PersistentCalls:
         m_Calls: []

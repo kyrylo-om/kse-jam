@@ -49,7 +49,7 @@ public class CharacterController : MonoBehaviour
     private Camera mainCamera;
 
     // State Variables
-    private bool isGrounded;
+    public bool isGrounded;
     private bool isTumbled;
     private float tumbleTimer;
     private float nextDiveTime;

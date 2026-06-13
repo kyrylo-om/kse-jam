@@ -13,7 +13,10 @@ public enum RuleType
 {
     JumpBoost,
     SpeedBoost,
-    GravityChange
+    GravityChange,
+    FPSLimit,
+    NoFriction,
+    Pixelation
 }
 
 [Serializable]

@@ -35,6 +35,12 @@ public class SimonRuleManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Always reset all rules when the scene/play mode ends
+        ResetAllRules();
+    }
+
     private void Update()
     {
         if (resetAction != null && resetAction.WasPressedThisFrame())
@@ -86,6 +92,9 @@ public class SimonRuleManager : MonoBehaviour
             RuleType.JumpBoost => new JumpBoostEffect(ruleDef.floatValue),
             RuleType.SpeedBoost => new SpeedBoostEffect(ruleDef.floatValue),
             RuleType.GravityChange => new GravityChangeEffect(ruleDef.floatValue),
+            RuleType.FPSLimit => new FPSLimitEffect(ruleDef.floatValue),
+            RuleType.NoFriction => new NoFrictionEffect(ruleDef.floatValue),
+            RuleType.Pixelation => new PixelationEffect(ruleDef.floatValue),
             _ => null
         };
     }

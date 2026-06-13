@@ -3,8 +3,9 @@ using UnityEngine;
 public class JumpBoostEffect : ISimonEffect
 {
     private readonly float multiplier;
-    private float originalJumpForce;
+    private GameObject playerObject;
     private CharacterController playerController;
+    private Rigidbody playerRigidbody;
     private bool applied;
 
     public JumpBoostEffect(float multiplier)
@@ -14,28 +15,56 @@ public class JumpBoostEffect : ISimonEffect
 
     public void Apply()
     {
-        GameObject player = GameObject.Find("PlayerBean");
-        if (player == null)
+        playerObject = GameObject.Find("PlayerBean");
+        if (playerObject == null)
         {
             Debug.LogWarning("[JumpBoostEffect] PlayerBean not found!");
             return;
         }
 
-        playerController = player.GetComponent<CharacterController>();
+        playerRigidbody = playerObject.GetComponent<Rigidbody>();
+        if (playerRigidbody == null) return;
+
+        playerController = playerObject.GetComponent<CharacterController>();
         if (playerController == null) return;
 
-        originalJumpForce = playerController.jumpForce;
-        playerController.jumpForce *= multiplier;
+        if (SimonRuleManager.Instance == null)
+        {
+            Debug.LogWarning("[JumpBoostEffect] SimonRuleManager.Instance not found!");
+            return;
+        }
+
         applied = true;
-        Debug.Log($"[JumpBoostEffect] Jump force boosted from {originalJumpForce} to {playerController.jumpForce}");
+        SimonRuleManager.Instance.StartCoroutine(AutoJumpRoutine());
+        Debug.Log($"[JumpBoostEffect] Auto-jump started!");
+    }
+
+    private System.Collections.IEnumerator AutoJumpRoutine()
+    {
+        float jumpStrength = 12f;
+
+        while (applied && playerObject != null)
+        {
+            // Wait until the player touches the ground
+            yield return new WaitUntil(() => playerController != null && playerController.isGrounded);
+
+            if (!applied || playerObject == null) break;
+
+            // Jump instantly
+            playerRigidbody.linearVelocity = new Vector3(
+                playerRigidbody.linearVelocity.x,
+                jumpStrength,
+                playerRigidbody.linearVelocity.z
+            );
+
+            yield return null;
+        }
     }
 
     public void Reset()
     {
-        if (!applied || playerController == null) return;
-
-        playerController.jumpForce = originalJumpForce;
+        if (!applied) return;
         applied = false;
-        Debug.Log($"[JumpBoostEffect] Jump force reset to {originalJumpForce}");
+        Debug.Log("[JumpBoostEffect] Auto-jump stopped.");
     }
 }
