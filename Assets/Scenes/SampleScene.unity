@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: 41713880}
   - component: {fileID: 41713879}
   - component: {fileID: 41713881}
+  - component: {fileID: 41713882}
   m_Layer: 5
   m_Name: Hampter
   m_TagString: Untagged
@@ -436,6 +437,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &41713882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41713877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f59b427855d99604e8c3ea03197bd595, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HampterAnimator
+  animator: {fileID: 41713881}
+  idleAnimations:
+  - Idle_brown_eyes
+  - Idle_think
+  - Idle_smile
+  - Idle
+  talkAnimations:
+  - Talk
+  - Talk_ahh
+  - Talk_idk
+  - Talk_67
+  - Talk_beautiful
+  - Talk_smart
+  - Talk_scream
+  - Talk_despair
+  - Talk_serious
 --- !u!4 &75036224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8892649428836478271, guid: 8d344ab009c746246a978824366dbfef, type: 3}
