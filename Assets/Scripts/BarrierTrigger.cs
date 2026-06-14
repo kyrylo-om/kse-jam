@@ -51,6 +51,13 @@ public class BarrierTrigger : MonoBehaviour
             Debug.LogWarning("[BarrierTrigger] SimonRuleManager.Instance not found.");
         }
 
+        // Play Hampter's taped animation
+        HampterAnimator hampter = FindAnyObjectByType<HampterAnimator>();
+        if (hampter != null)
+        {
+            hampter.StartTaped();
+        }
+
         // Show effects text for 3 seconds (coroutine runs on the text itself, survives this object's destruction)
         if (effectsText != null)
         {
