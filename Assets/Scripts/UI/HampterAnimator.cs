@@ -8,6 +8,8 @@ public class HampterAnimator : MonoBehaviour
     [Header("Animation State Names")]
     [SerializeField] private string[] idleAnimations;
     [SerializeField] private string[] talkAnimations;
+    [SerializeField] private string tapedAnimation = "Taped";
+    [SerializeField] private string deathAnimation = "Lose";
 
     private string currentAnimation;
 
@@ -19,6 +21,16 @@ public class HampterAnimator : MonoBehaviour
     public void StartTalk()
     {
         PlayRandom(talkAnimations);
+    }
+
+    public void StartDeath()
+    {
+        animator.Play(deathAnimation);
+    }
+
+    public void StartTaped()
+    {
+        animator.Play(tapedAnimation);
     }
 
     private void PlayRandom(string[] animations)
