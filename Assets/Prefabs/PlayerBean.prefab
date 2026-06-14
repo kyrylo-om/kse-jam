@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f7915b2c279ab429f5a5d33ff3e833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallGuysCharacterController
-  _moveSpeed: 8
+  _moveSpeed: 12
   acceleration: 30
   deceleration: 25
   airControl: 0.6
