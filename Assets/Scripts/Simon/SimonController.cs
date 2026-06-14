@@ -12,6 +12,7 @@ public class SimonController : MonoBehaviour
     [SerializeField] private HampterAnimator hampterAnimator;
 
     [Header("Settings")]
+    [SerializeField] private float initialDelay = 2f;
     [SerializeField] private float displayInterval = 10f;
     [SerializeField] private bool pickRandomLine = false;
 
@@ -47,6 +48,9 @@ public class SimonController : MonoBehaviour
 
     private IEnumerator SimonLoop()
     {
+        // Initial delay before Simon says anything (e.g. after scene reload)
+        yield return new WaitForSeconds(initialDelay);
+
         while (true)
         {
             if (lines.Count > 0 && dialogueController != null)

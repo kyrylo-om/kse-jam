@@ -1795,6 +1795,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1617824853}
   - component: {fileID: 1617824854}
+  - component: {fileID: 1617824855}
   m_Layer: 0
   m_Name: TV
   m_TagString: Untagged
@@ -1838,6 +1839,28 @@ MonoBehaviour:
   autoCalculateOffsets: 1
   localPositionOffset: {x: 0, y: 0, z: 0}
   localRotationOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!95 &1617824855
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617824852}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 80a10446bb413ce4b8c75a212815cabd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &1643942867 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3733502304490922186, guid: 5455690c28682274db8ab08b894a20be, type: 3}
@@ -2118,6 +2141,7 @@ MonoBehaviour:
   ruleManager: {fileID: 1826226373}
   actionValidator: {fileID: 0}
   hampterAnimator: {fileID: 0}
+  initialDelay: 2
   displayInterval: 5
   pickRandomLine: 1
   simonSaysPrefix: 'Simon says... '
