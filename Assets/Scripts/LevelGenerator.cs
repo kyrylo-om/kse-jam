@@ -87,7 +87,7 @@ public class LevelGenerator : MonoBehaviour
             // Spawn a barrier after every 5th block (between indices 3 and 4, 8 and 9, etc.)
             if (barrierPrefab != null && i > 0 && i % barrierBlocks == 0)
             {
-                Vector3 barrierPos = new Vector3(0f, 0f, i * blockLength + blockLength * 0.5f);
+                Vector3 barrierPos = new Vector3(0f, 6f, i * blockLength + blockLength * 0.5f);
                 SpawnBarrier(barrierPos, i);
             }
         }
