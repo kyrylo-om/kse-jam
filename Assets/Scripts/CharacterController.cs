@@ -39,6 +39,16 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private float tiltSpeed = 10f;
     [SerializeField] private float squashStretchSpeed = 12f;
 
+    [Header("Death / Hazard")]
+    [Tooltip("Prefab with explosion animation to spawn on death.")]
+    [SerializeField] private GameObject explosionPrefab;
+    [Tooltip("Objects with this tag will kill the player on touch.")]
+    [SerializeField] private string hazardTag = "Hazard";
+    [Tooltip("If the player falls below this Y position, they die.")]
+    [SerializeField] private float deathYThreshold = -20f;
+    [Tooltip("How long the player stays stunned before scene restarts.")]
+    [SerializeField] private float deathStunDuration = 0.8f;
+
     // Actions
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -52,6 +62,7 @@ public class CharacterController : MonoBehaviour
     // State Variables
     public bool isGrounded;
     public bool isTumbled { get; private set; }
+    public bool isDead { get; private set; }
     private float tumbleTimer;
     private float nextDiveTime;
     private bool diveRequested;
@@ -106,8 +117,8 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        // Read input if not tumbled
-        if (!isTumbled)
+        // Read input if not tumbled and not dead
+        if (!isTumbled && !isDead)
         {
             if (moveAction != null) moveInput = moveAction.ReadValue<Vector2>();
             else moveInput = Vector2.zero;
@@ -127,13 +138,23 @@ public class CharacterController : MonoBehaviour
             moveInput = Vector2.zero;
         }
 
-        HandleVisuals();
+        if (!isDead)
+            HandleVisuals();
     }
 
     private void FixedUpdate()
     {
         CheckGrounded();
-        
+
+        // Death from falling below threshold
+        if (!isDead && transform.position.y < deathYThreshold)
+        {
+            Die();
+            return;
+        }
+
+        if (isDead) return;
+
         if (isTumbled)
         {
             HandleTumbledState();
@@ -404,5 +425,66 @@ public class CharacterController : MonoBehaviour
     {
         float squashXZ = 1f - (stretchY - 1f) * 0.5f;
         visualHolder.localScale = new Vector3(squashXZ, stretchY, squashXZ);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isDead) return;
+
+        if (collision.gameObject.CompareTag(hazardTag))
+        {
+            Die();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isDead) return;
+
+        if (other.CompareTag(hazardTag))
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Stop all movement & freeze rotation
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        FreezeRotation();
+
+        // Disable input & clear state
+        moveInput = Vector2.zero;
+        jumpRequested = false;
+        diveRequested = false;
+
+        // Spawn explosion
+        if (explosionPrefab != null)
+        {
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        }
+
+        // Hide the visual
+        if (visualHolder != null)
+        {
+            visualHolder.gameObject.SetActive(false);
+        }
+
+        // Start death routine
+        StartCoroutine(DeathRoutine());
+    }
+
+    private System.Collections.IEnumerator DeathRoutine()
+    {
+        // Wait for explosion animation to play
+        yield return new WaitForSeconds(deathStunDuration);
+
+        // Restart the entire scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -146,9 +146,14 @@ MonoBehaviour:
   normalPhysicMaterial: {fileID: 13400000, guid: 2d47404d38adffa4a82eca5ef4dff457, type: 2}
   tumbledPhysicMaterial: {fileID: 13400000, guid: d53db238ad3ff894c9a6ac18700b9116, type: 2}
   visualHolder: {fileID: 1233410443164471481}
+  animator: {fileID: 0}
   tiltAngleMax: 15
   tiltSpeed: 10
   squashStretchSpeed: 12
+  explosionPrefab: {fileID: 3009667299289788384, guid: 67f83bde3a9da7a4aaa3679abb4973f3, type: 3}
+  hazardTag: Hazard
+  deathYThreshold: -20
+  deathStunDuration: 0.8
   isGrounded: 0
 --- !u!1001 &7038644231384923392
 PrefabInstance:
