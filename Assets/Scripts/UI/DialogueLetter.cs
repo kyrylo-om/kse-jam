@@ -29,8 +29,9 @@ public class DialogueLetter : MonoBehaviour
 
             // Add a randomly chosen outline from a fixed palette
             textComponent.outlineWidth = 0.2f; 
-            textComponent.color = BasicColors[Random.Range(0, BasicColors.Length)];
-            textComponent.outlineColor = Color.white;
+            // textComponent.outlineColor = BasicColors[Random.Range(0, BasicColors.Length)];
+            textComponent.outlineColor = Color.black;
+            textComponent.color = Color.white;
             
             // Ensure the shader keyword is enabled on the material instance
             // Using fontMaterial creates a unique instance for this specific letter

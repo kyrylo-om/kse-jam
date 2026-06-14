@@ -19,9 +19,15 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private bool generateOnAwake = true;
 
     [Header("Barriers")]
-    [Tooltip("Vertical panel spawned every 5 blocks, placed between the 4th and 5th block.")]
+    [Tooltip("Vertical panel spawned every N blocks.")]
     [SerializeField] private GameObject barrierPrefab;
     [SerializeField] private int barrierBlocks = 5;
+
+    [Header("End Block")]
+    [Tooltip("Block spawned at the end of the track.")]
+    [SerializeField] private GameObject endBlockPrefab;
+
+    [Header("Hierarchy Reference")]
     [Tooltip("Transform parent under which blocks will be generated (optional).")]
     [SerializeField] private Transform levelContainer;
 
@@ -87,12 +93,19 @@ public class LevelGenerator : MonoBehaviour
             // Spawn a barrier after every 5th block (between indices 3 and 4, 8 and 9, etc.)
             if (barrierPrefab != null && i > 0 && i % barrierBlocks == 0)
             {
-                Vector3 barrierPos = new Vector3(0f, 0f, i * blockLength + blockLength * 0.5f);
+                Vector3 barrierPos = new Vector3(0f, 6f, i * blockLength + blockLength * 0.5f);
                 SpawnBarrier(barrierPos, i);
             }
         }
 
         Debug.Log($"Successfully generated level with {levelLength} blocks.");
+
+        // Spawn end block at the end of the track
+        if (endBlockPrefab != null)
+        {
+            Vector3 endPos = new Vector3(0f, -0.5f, levelLength * blockLength);
+            SpawnEndBlock(endPos);
+        }
     }
 
     public void ClearLevel()
@@ -146,5 +159,25 @@ public class LevelGenerator : MonoBehaviour
 #endif
         GameObject spawnedBarrier = Instantiate(barrierPrefab, position, Quaternion.identity, levelContainer);
         spawnedBarrier.name = $"Barrier_{blockIndex}";
+    }
+
+    private void SpawnEndBlock(Vector3 position)
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            GameObject endBlock = PrefabUtility.InstantiatePrefab(endBlockPrefab) as GameObject;
+            if (endBlock != null)
+            {
+                endBlock.transform.position = position;
+                endBlock.transform.SetParent(levelContainer);
+                endBlock.name = "EndBlock";
+                Undo.RegisterCreatedObjectUndo(endBlock, "Generate End Block");
+            }
+            return;
+        }
+#endif
+        GameObject spawned = Instantiate(endBlockPrefab, position, Quaternion.identity, levelContainer);
+        spawned.name = "EndBlock";
     }
 }
