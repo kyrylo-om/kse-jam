@@ -56,6 +56,7 @@ public class CharacterController : MonoBehaviour
     private bool diveRequested;
     private bool jumpRequested;
     private Vector2 moveInput;
+    [System.NonSerialized] public Vector2 moveInputMultiplier = Vector2.one; // used by effects (e.g. invert controls)
 
     // Animation / Wobble
     private Vector3 targetScale = Vector3.one;
@@ -185,7 +186,7 @@ public class CharacterController : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
 
-        Vector3 moveDir = (camForward * moveInput.y + camRight * moveInput.x).normalized;
+        Vector3 moveDir = (camForward * (moveInput.y * moveInputMultiplier.y) + camRight * (moveInput.x * moveInputMultiplier.x)).normalized;
 
         // Target Velocity
         Vector3 targetVelocity = moveDir * moveSpeed;
