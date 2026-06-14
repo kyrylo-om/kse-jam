@@ -2761,7 +2761,7 @@ MonoBehaviour:
     failureMessage: 
     rule:
       type: 5
-      floatValue: 0.3
+      floatValue: 0.2
     onTriggered:
       m_PersistentCalls:
         m_Calls: []

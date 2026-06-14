@@ -9,6 +9,7 @@ public class SimonController : MonoBehaviour
     [SerializeField] private DialogueController dialogueController;
     [SerializeField] private SimonRuleManager ruleManager;
     [SerializeField] private SimonActionValidator actionValidator;
+    [SerializeField] private HampterAnimator hampterAnimator;
 
     [Header("Settings")]
     [SerializeField] private float displayInterval = 10f;
@@ -37,6 +38,9 @@ public class SimonController : MonoBehaviour
 
         if (actionValidator == null)
             actionValidator = gameObject.AddComponent<SimonActionValidator>();
+
+        if (hampterAnimator == null)
+            hampterAnimator = FindAnyObjectByType<HampterAnimator>();
 
         loopCoroutine = StartCoroutine(SimonLoop());
     }
@@ -88,13 +92,16 @@ public class SimonController : MonoBehaviour
                 }
 
                 // Phase 1: Type "Simon says... "
+                hampterAnimator?.StartTalk();
                 bool simonSaysDone = false;
                 dialogueController.ShowText(simonSaysPrefix, () => simonSaysDone = true);
                 yield return new WaitUntil(() => simonSaysDone);
+                hampterAnimator?.StartIdle();
 
                 yield return new WaitForSeconds(delayAfterSimonSays);
 
                 // Phase 2: Append the line text (letters stay on screen)
+                hampterAnimator?.StartTalk();
                 bool lineDone = false;
                 dialogueController.AppendText(currentLine.text, () => lineDone = true);
                 yield return new WaitUntil(() => lineDone);
@@ -117,6 +124,8 @@ public class SimonController : MonoBehaviour
                         HandleEventLine(currentLine);
                         break;
                 }
+
+                hampterAnimator?.StartIdle();
 
                 if (!pickRandomLine)
                 {

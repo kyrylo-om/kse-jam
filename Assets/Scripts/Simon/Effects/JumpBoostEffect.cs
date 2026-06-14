@@ -45,8 +45,8 @@ public class JumpBoostEffect : ISimonEffect
 
         while (applied && playerObject != null)
         {
-            // Wait until the player touches the ground
-            yield return new WaitUntil(() => playerController != null && playerController.isGrounded);
+            // Wait until the player touches the ground (and is not tumbled)
+            yield return new WaitUntil(() => playerController != null && playerController.isGrounded && !playerController.isTumbled);
 
             if (!applied || playerObject == null) break;
 

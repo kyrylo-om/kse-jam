@@ -50,7 +50,7 @@ public class CharacterController : MonoBehaviour
 
     // State Variables
     public bool isGrounded;
-    private bool isTumbled;
+    public bool isTumbled { get; private set; }
     private float tumbleTimer;
     private float nextDiveTime;
     private bool diveRequested;
