@@ -16,7 +16,8 @@ public enum RuleType
     GravityChange,
     FPSLimit,
     NoFriction,
-    Pixelation
+    Pixelation,
+    InvertedControls
 }
 
 [Serializable]

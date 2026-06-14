@@ -95,6 +95,7 @@ public class SimonRuleManager : MonoBehaviour
             RuleType.FPSLimit => new FPSLimitEffect(ruleDef.floatValue),
             RuleType.NoFriction => new NoFrictionEffect(ruleDef.floatValue),
             RuleType.Pixelation => new PixelationEffect(ruleDef.floatValue),
+            RuleType.InvertedControls => new InvertedControlsEffect(ruleDef.floatValue),
             _ => null
         };
     }
