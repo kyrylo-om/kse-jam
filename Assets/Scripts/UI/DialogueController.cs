@@ -17,6 +17,9 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private float letterDelay = 0.05f;
     [SerializeField] private string appearAnimationTrigger = "Appear";
 
+    [Header("Sound")]
+    [SerializeField] private AudioSource letterSoundSource;
+
     private List<GameObject> activeLetters = new List<GameObject>();
     private Coroutine typingCoroutine;
     private string currentDisplayedText = "";
@@ -124,6 +127,13 @@ public class DialogueController : MonoBehaviour
                     }
 
                     activeLetters.Add(letterGo);
+
+                    // Play letter sound with randomized pitch
+                    if (letterSoundSource != null)
+                    {
+                        letterSoundSource.pitch = Random.Range(0.85f, 1.15f);
+                        letterSoundSource.Play();
+                    }
 
                     // Delay between each letter
                     yield return new WaitForSeconds(letterDelay);

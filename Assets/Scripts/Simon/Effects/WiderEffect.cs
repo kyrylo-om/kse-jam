@@ -4,7 +4,6 @@ public class WiderEffect : ISimonEffect
 {
     private readonly float widthMultiplier;
     private CharacterController playerController;
-    private Vector3 originalMultiplier;
     private bool applied;
 
     public WiderEffect(float widthMultiplier)
@@ -24,11 +23,12 @@ public class WiderEffect : ISimonEffect
         playerController = player.GetComponent<CharacterController>();
         if (playerController == null) return;
 
-        originalMultiplier = playerController.baseScaleMultiplier;
+        // Multiply the X and Z by the width multiplier
+        Vector3 current = playerController.baseScaleMultiplier;
         playerController.baseScaleMultiplier = new Vector3(
-            originalMultiplier.x * widthMultiplier,
-            originalMultiplier.y,
-            originalMultiplier.z * widthMultiplier
+            current.x * widthMultiplier,
+            current.y,
+            current.z * widthMultiplier
         );
         applied = true;
         Debug.Log($"[WiderEffect] Player widened by {widthMultiplier}x");
@@ -38,8 +38,14 @@ public class WiderEffect : ISimonEffect
     {
         if (!applied || playerController == null) return;
 
-        playerController.baseScaleMultiplier = originalMultiplier;
+        // Undo only our multiplier
+        Vector3 current = playerController.baseScaleMultiplier;
+        playerController.baseScaleMultiplier = new Vector3(
+            current.x / widthMultiplier,
+            current.y,
+            current.z / widthMultiplier
+        );
         applied = false;
-        Debug.Log("[WiderEffect] Player scale restored.");
+        Debug.Log("[WiderEffect] Player width restored.");
     }
 }

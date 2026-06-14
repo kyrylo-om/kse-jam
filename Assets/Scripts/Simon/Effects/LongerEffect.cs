@@ -4,7 +4,6 @@ public class LongerEffect : ISimonEffect
 {
     private readonly float lengthMultiplier;
     private CharacterController playerController;
-    private Vector3 originalMultiplier;
     private bool applied;
 
     public LongerEffect(float lengthMultiplier)
@@ -24,11 +23,12 @@ public class LongerEffect : ISimonEffect
         playerController = player.GetComponent<CharacterController>();
         if (playerController == null) return;
 
-        originalMultiplier = playerController.baseScaleMultiplier;
+        // Multiply the Z (forward) by the length multiplier
+        Vector3 current = playerController.baseScaleMultiplier;
         playerController.baseScaleMultiplier = new Vector3(
-            originalMultiplier.x,
-            originalMultiplier.y,
-            originalMultiplier.z * lengthMultiplier
+            current.x,
+            current.y,
+            current.z * lengthMultiplier
         );
         applied = true;
         Debug.Log($"[LongerEffect] Player lengthened by {lengthMultiplier}x");
@@ -38,8 +38,14 @@ public class LongerEffect : ISimonEffect
     {
         if (!applied || playerController == null) return;
 
-        playerController.baseScaleMultiplier = originalMultiplier;
+        // Undo only our multiplier
+        Vector3 current = playerController.baseScaleMultiplier;
+        playerController.baseScaleMultiplier = new Vector3(
+            current.x,
+            current.y,
+            current.z / lengthMultiplier
+        );
         applied = false;
-        Debug.Log("[LongerEffect] Player scale restored.");
+        Debug.Log("[LongerEffect] Player length restored.");
     }
 }
