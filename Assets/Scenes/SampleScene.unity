@@ -465,11 +465,33 @@ MonoBehaviour:
   - Talk_scream
   - Talk_despair
   - Talk_serious
---- !u!4 &60273135 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 215842320251263763, guid: 5455690c28682274db8ab08b894a20be, type: 3}
+--- !u!1 &60273134 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 699469572375495081, guid: 5455690c28682274db8ab08b894a20be, type: 3}
   m_PrefabInstance: {fileID: 4087353638303583902}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &60273136
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60273134}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6990ef856b64f654cbb754917f69b95b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &75036224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8892649428836478271, guid: 8d344ab009c746246a978824366dbfef, type: 3}
@@ -2512,7 +2534,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2642,7 +2664,7 @@ MonoBehaviour:
   actionValidator: {fileID: 0}
   hampterAnimator: {fileID: 0}
   displayInterval: 5
-  pickRandomLine: 0
+  pickRandomLine: 1
   simonSaysPrefix: 'Simon says... '
   delayAfterSimonSays: 1
   lines:
@@ -2766,7 +2788,7 @@ MonoBehaviour:
     onTriggered:
       m_PersistentCalls:
         m_Calls: []
-  - text: ARE YOU DRUNK OR WHAT
+  - text: MAN ARE YOU DRUNK OR WHAT
     type: 1
     delayBeforeAction: 0
     actionTimeLimit: 0
@@ -2805,6 +2827,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4ab8bc297f0f448acf0973c59540ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimonRuleManager
+--- !u!4 &1832596168 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1233410443164471481, guid: 5455690c28682274db8ab08b894a20be, type: 3}
+  m_PrefabInstance: {fileID: 4087353638303583902}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1848274574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3103,10 +3130,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 215842320251263763, guid: 5455690c28682274db8ab08b894a20be, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 215842320251263763, guid: 5455690c28682274db8ab08b894a20be, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 215842320251263763, guid: 5455690c28682274db8ab08b894a20be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 2750741981500371975, guid: 5455690c28682274db8ab08b894a20be, type: 3}
       propertyPath: visualHolder
       value: 
-      objectReference: {fileID: 60273135}
+      objectReference: {fileID: 1832596168}
     - target: {fileID: 3733502304490922186, guid: 5455690c28682274db8ab08b894a20be, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3154,7 +3193,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 699469572375495081, guid: 5455690c28682274db8ab08b894a20be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 60273136}
   m_SourcePrefab: {fileID: 100100000, guid: 5455690c28682274db8ab08b894a20be, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
