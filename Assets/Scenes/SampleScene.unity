@@ -2539,6 +2539,8 @@ MonoBehaviour:
   - {fileID: 2601103209692755292, guid: 1e72f7e4dc2012443a5a20d12467e9ef, type: 3}
   - {fileID: 1303842163287987122, guid: cd3b8c934a272ec4c969a20bfc79658b, type: 3}
   - {fileID: 7142589941947938472, guid: 7f83f407dcb6d65439f0ae6bb7fdb709, type: 3}
+  - {fileID: 785402383566827734, guid: 43c6a34307e470d48ac9032b18777553, type: 3}
+  - {fileID: 4351615047764741579, guid: 98eddae9d33c9494daa6c252aa70136f, type: 3}
   generateOnAwake: 1
   barrierPrefab: {fileID: 8248819062071862057, guid: cdbcdaedb70eb6544967fb4b287a2b69, type: 3}
   barrierBlocks: 5
