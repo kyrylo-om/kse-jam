@@ -49,6 +49,14 @@ public class CharacterController : MonoBehaviour
     [Tooltip("How long the player stays stunned before scene restarts.")]
     [SerializeField] private float deathStunDuration = 0.8f;
 
+    [Header("Win / Victory")]
+    [Tooltip("Objects with this tag trigger victory when touched.")]
+    [SerializeField] private string winTag = "Win";
+    [Tooltip("TV object in the scene that will explode on victory.")]
+    [SerializeField] private GameObject tvObject;
+    [Tooltip("How long the victory stun lasts before quitting.")]
+    [SerializeField] private float winStunDuration = 1.5f;
+
     // Actions
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -63,6 +71,7 @@ public class CharacterController : MonoBehaviour
     public bool isGrounded;
     public bool isTumbled { get; private set; }
     public bool isDead { get; private set; }
+    public bool isWin { get; private set; }
     private float tumbleTimer;
     private float nextDiveTime;
     private bool diveRequested;
@@ -117,8 +126,8 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        // Read input if not tumbled and not dead
-        if (!isTumbled && !isDead)
+        // Read input if not tumbled, not dead, and not winning
+        if (!isTumbled && !isDead && !isWin)
         {
             if (moveAction != null) moveInput = moveAction.ReadValue<Vector2>();
             else moveInput = Vector2.zero;
@@ -138,7 +147,7 @@ public class CharacterController : MonoBehaviour
             moveInput = Vector2.zero;
         }
 
-        if (!isDead)
+        if (!isDead && !isWin)
             HandleVisuals();
     }
 
@@ -147,13 +156,13 @@ public class CharacterController : MonoBehaviour
         CheckGrounded();
 
         // Death from falling below threshold
-        if (!isDead && transform.position.y < deathYThreshold)
+        if (!isDead && !isWin && transform.position.y < deathYThreshold)
         {
             Die();
             return;
         }
 
-        if (isDead) return;
+        if (isDead || isWin) return;
 
         if (isTumbled)
         {
@@ -429,21 +438,29 @@ public class CharacterController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isDead) return;
+        if (isDead || isWin) return;
 
         if (collision.gameObject.CompareTag(hazardTag))
         {
             Die();
         }
+        else if (collision.gameObject.CompareTag(winTag))
+        {
+            Win();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isDead) return;
+        if (isDead || isWin) return;
 
         if (other.CompareTag(hazardTag))
         {
             Die();
+        }
+        else if (other.CompareTag(winTag))
+        {
+            Win();
         }
     }
 
@@ -486,5 +503,54 @@ public class CharacterController : MonoBehaviour
         // Restart the entire scene
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>
+    /// Called when the player touches an object with the Win tag.
+    /// Freezes the player, blows up the TV, then quits the game.
+    /// </summary>
+    public void Win()
+    {
+        if (isDead || isWin) return;
+        isWin = true;
+
+        // Stop all movement & freeze rotation
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        FreezeRotation();
+
+        // Disable input & clear state
+        moveInput = Vector2.zero;
+        jumpRequested = false;
+        diveRequested = false;
+
+        // Blow up the TV object
+        if (tvObject != null && explosionPrefab != null)
+        {
+            Instantiate(explosionPrefab, tvObject.transform.position, Quaternion.identity);
+            tvObject.SetActive(false);
+        }
+
+        // Hide the player visual
+        if (visualHolder != null)
+        {
+            visualHolder.gameObject.SetActive(false);
+        }
+
+        // Start win routine
+        StartCoroutine(WinRoutine());
+    }
+
+    private System.Collections.IEnumerator WinRoutine()
+    {
+        // Wait for explosion animation to play
+        yield return new WaitForSeconds(winStunDuration);
+
+        // Quit the application (stops play in Editor)
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
