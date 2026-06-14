@@ -92,6 +92,9 @@ public class SimonRuleManager : MonoBehaviour
             RuleType.NoFriction => new NoFrictionEffect(ruleDef.floatValue),
             RuleType.Pixelation => new PixelationEffect(ruleDef.floatValue),
             RuleType.InvertedControls => new InvertedControlsEffect(ruleDef.floatValue),
+            RuleType.Wider => new WiderEffect(ruleDef.floatValue),
+            RuleType.Longer => new LongerEffect(ruleDef.floatValue),
+            RuleType.Psychedelic => new PsychedelicEffect(ruleDef.floatValue),
             _ => null
         };
     }

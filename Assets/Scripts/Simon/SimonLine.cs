@@ -17,7 +17,10 @@ public enum RuleType
     FPSLimit,
     NoFriction,
     Pixelation,
-    InvertedControls
+    InvertedControls,
+    Wider,
+    Longer,
+    Psychedelic
 }
 
 [Serializable]

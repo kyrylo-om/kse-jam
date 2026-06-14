@@ -33,7 +33,12 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private PhysicsMaterial tumbledPhysicMaterial;
 
     [Header("Visual Effects")]
-    [SerializeField] private Transform visualHolder;
+    [SerializeField] private Transform _visualHolder;
+    public Transform visualHolder
+    {
+        get => _visualHolder;
+        set => _visualHolder = value;
+    }
     [SerializeField] private Animator animator;
     [SerializeField] private float tiltAngleMax = 15f;
     [SerializeField] private float tiltSpeed = 10f;
@@ -83,6 +88,7 @@ public class CharacterController : MonoBehaviour
     private Vector3 targetScale = Vector3.one;
     private float turnAmount;
     private float currentWobbleTime;
+    [System.NonSerialized] public Vector3 baseScaleMultiplier = Vector3.one; // used by effects (Wider, Longer)
 
     private void Awake()
     {
@@ -382,7 +388,13 @@ public class CharacterController : MonoBehaviour
             speedPercent = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude / moveSpeed;
 
             // 1. Squash & Stretch Lerping back to Vector3.one
-            visualHolder.localScale = Vector3.Lerp(visualHolder.localScale, targetScale, Time.deltaTime * squashStretchSpeed);
+            // baseScaleMultiplier is applied on top so effects (Wider, Longer) don't get overwritten
+            Vector3 finalTargetScale = new Vector3(
+                targetScale.x * baseScaleMultiplier.x,
+                targetScale.y * baseScaleMultiplier.y,
+                targetScale.z * baseScaleMultiplier.z
+            );
+            visualHolder.localScale = Vector3.Lerp(visualHolder.localScale, finalTargetScale, Time.deltaTime * squashStretchSpeed);
             targetScale = Vector3.Lerp(targetScale, Vector3.one, Time.deltaTime * squashStretchSpeed);
 
             // 2. Wobble & Tilt based on movement and tumbling
