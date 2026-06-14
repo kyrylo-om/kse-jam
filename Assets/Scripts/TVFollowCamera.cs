@@ -32,7 +32,7 @@ public class TVFollowCamera : MonoBehaviour
             }
             else
             {
-                Camera cam = FindFirstObjectByType<Camera>();
+                Camera cam = FindAnyObjectByType<Camera>();
                 if (cam != null)
                 {
                     cameraTransform = cam.transform;
