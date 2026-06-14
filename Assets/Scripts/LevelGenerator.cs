@@ -18,7 +18,10 @@ public class LevelGenerator : MonoBehaviour
     [Tooltip("Automatically generate the level on Awake when playing.")]
     [SerializeField] private bool generateOnAwake = true;
 
-    [Header("Hierarchy Reference")]
+    [Header("Barriers")]
+    [Tooltip("Vertical panel spawned every 5 blocks, placed between the 4th and 5th block.")]
+    [SerializeField] private GameObject barrierPrefab;
+    [SerializeField] private int barrierBlocks = 5;
     [Tooltip("Transform parent under which blocks will be generated (optional).")]
     [SerializeField] private Transform levelContainer;
 
@@ -80,6 +83,13 @@ public class LevelGenerator : MonoBehaviour
             {
                 spawnedBlock.name = $"Block_{i}_{prefab.name}";
             }
+
+            // Spawn a barrier after every 5th block (between indices 3 and 4, 8 and 9, etc.)
+            if (barrierPrefab != null && i > 0 && i % barrierBlocks == 0)
+            {
+                Vector3 barrierPos = new Vector3(0f, 0f, i * blockLength + blockLength * 0.5f);
+                SpawnBarrier(barrierPos, i);
+            }
         }
 
         Debug.Log($"Successfully generated level with {levelLength} blocks.");
@@ -116,5 +126,25 @@ public class LevelGenerator : MonoBehaviour
                 ClearLevel();
             }
         }
+    }
+
+    private void SpawnBarrier(Vector3 position, int blockIndex)
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            GameObject barrier = PrefabUtility.InstantiatePrefab(barrierPrefab) as GameObject;
+            if (barrier != null)
+            {
+                barrier.transform.position = position;
+                barrier.transform.SetParent(levelContainer);
+                barrier.name = $"Barrier_{blockIndex}";
+                Undo.RegisterCreatedObjectUndo(barrier, "Generate Barrier");
+            }
+            return;
+        }
+#endif
+        GameObject spawnedBarrier = Instantiate(barrierPrefab, position, Quaternion.identity, levelContainer);
+        spawnedBarrier.name = $"Barrier_{blockIndex}";
     }
 }

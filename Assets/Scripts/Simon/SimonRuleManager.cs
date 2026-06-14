@@ -43,10 +43,7 @@ public class SimonRuleManager : MonoBehaviour
 
     private void Update()
     {
-        if (resetAction != null && resetAction.WasPressedThisFrame())
-        {
-            ResetAllRules();
-        }
+        
     }
 
     public void ApplyRule(RuleDefinition ruleDef)
