@@ -27,6 +27,12 @@ public class LevelGenerator : MonoBehaviour
     [Tooltip("Block spawned at the end of the track.")]
     [SerializeField] private GameObject endBlockPrefab;
 
+    [Header("Extra Object")]
+    [Tooltip("A constant object spawned on every block (e.g. a collectible, decoration).")]
+    [SerializeField] private GameObject constantExtraPrefab;
+    [Tooltip("Rotation applied to the constant extra object when spawned.")]
+    [SerializeField] private Vector3 constantExtraRotation = Vector3.zero;
+
     [Header("Hierarchy Reference")]
     [Tooltip("Transform parent under which blocks will be generated (optional).")]
     [SerializeField] private Transform levelContainer;
@@ -88,6 +94,13 @@ public class LevelGenerator : MonoBehaviour
             if (spawnedBlock != null)
             {
                 spawnedBlock.name = $"Block_{i}_{prefab.name}";
+            }
+
+            // Spawn a constant extra object on top of this block
+            if (constantExtraPrefab != null)
+            {
+                Vector3 extraPos = spawnPosition + Vector3.up * 1.5f;
+                SpawnExtra(extraPos, i);
             }
 
             // Spawn a barrier after every 5th block (between indices 3 and 4, 8 and 9, etc.)
@@ -179,5 +192,27 @@ public class LevelGenerator : MonoBehaviour
 #endif
         GameObject spawned = Instantiate(endBlockPrefab, position, Quaternion.identity, levelContainer);
         spawned.name = "EndBlock";
+    }
+
+    private void SpawnExtra(Vector3 position, int blockIndex)
+    {
+        Quaternion rotation = Quaternion.Euler(constantExtraRotation);
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            GameObject extra = PrefabUtility.InstantiatePrefab(constantExtraPrefab) as GameObject;
+            if (extra != null)
+            {
+                extra.transform.position = position;
+                extra.transform.rotation = rotation;
+                extra.transform.SetParent(levelContainer);
+                extra.name = $"Extra_{blockIndex}";
+                Undo.RegisterCreatedObjectUndo(extra, "Generate Extra");
+            }
+            return;
+        }
+#endif
+        GameObject spawned = Instantiate(constantExtraPrefab, position, rotation, levelContainer);
+        spawned.name = $"Extra_{blockIndex}";
     }
 }

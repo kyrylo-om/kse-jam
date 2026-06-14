@@ -45,8 +45,8 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private float squashStretchSpeed = 12f;
 
     [Header("Death / Hazard")]
-    [Tooltip("Prefab with explosion animation to spawn on death.")]
-    [SerializeField] private GameObject explosionPrefab;
+    [Tooltip("Prefab with explosion animation to spawn on player death.")]
+    [SerializeField] private GameObject deathExplosionPrefab;
     [Tooltip("Objects with this tag will kill the player on touch.")]
     [SerializeField] private string hazardTag = "Hazard";
     [Tooltip("If the player falls below this Y position, they die.")]
@@ -59,6 +59,10 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private string winTag = "Win";
     [Tooltip("TV object in the scene that will explode on victory.")]
     [SerializeField] private GameObject tvObject;
+    [Tooltip("Prefab with explosion animation to spawn on the TV.")]
+    [SerializeField] private GameObject tvExplosionPrefab;
+    [Tooltip("Local position offset for the TV explosion (relative to the TV).")]
+    [SerializeField] private Vector3 tvExplosionOffset = Vector3.zero;
     [Tooltip("How long the victory stun lasts before quitting.")]
     [SerializeField] private float winStunDuration = 1.5f;
 
@@ -491,10 +495,10 @@ public class CharacterController : MonoBehaviour
         jumpRequested = false;
         diveRequested = false;
 
-        // Spawn explosion
-        if (explosionPrefab != null)
+        // Spawn explosion on player
+        if (deathExplosionPrefab != null)
         {
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            Instantiate(deathExplosionPrefab, transform.position, Quaternion.identity);
         }
 
         // Hide the visual
@@ -537,9 +541,10 @@ public class CharacterController : MonoBehaviour
         diveRequested = false;
 
         // Blow up the TV object
-        if (tvObject != null && explosionPrefab != null)
+        if (tvObject != null && tvExplosionPrefab != null)
         {
-            Instantiate(explosionPrefab, tvObject.transform.position, Quaternion.identity);
+            Vector3 explosionPos = tvObject.transform.position + tvObject.transform.TransformDirection(tvExplosionOffset);
+            Instantiate(tvExplosionPrefab, explosionPos, Quaternion.identity);
             tvObject.SetActive(false);
         }
 
