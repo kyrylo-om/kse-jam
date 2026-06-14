@@ -34,6 +34,7 @@ public class CharacterController : MonoBehaviour
 
     [Header("Visual Effects")]
     [SerializeField] private Transform visualHolder;
+    [SerializeField] private Animator animator;
     [SerializeField] private float tiltAngleMax = 15f;
     [SerializeField] private float tiltSpeed = 10f;
     [SerializeField] private float squashStretchSpeed = 12f;
@@ -344,41 +345,52 @@ public class CharacterController : MonoBehaviour
 
     private void HandleVisuals()
     {
-        if (visualHolder == null) return;
+        float speedPercent = 0f;
 
-        // 1. Squash & Stretch Lerping back to Vector3.one
-        visualHolder.localScale = Vector3.Lerp(visualHolder.localScale, targetScale, Time.deltaTime * squashStretchSpeed);
-        targetScale = Vector3.Lerp(targetScale, Vector3.one, Time.deltaTime * squashStretchSpeed);
-
-        // 2. Wobble & Tilt based on movement and tumbling
-        if (!isTumbled)
+        if (visualHolder != null)
         {
-            // Wobble animation over time (cute little waddle)
-            float speedPercent = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude / moveSpeed;
-            if (speedPercent > 0.1f && isGrounded)
-            {
-                currentWobbleTime += Time.deltaTime * 15f;
-                // Side-to-side waddle wobble
-                float wobbleZ = Mathf.Sin(currentWobbleTime) * 8f * speedPercent;
-                // Forward tilt when running
-                float wobbleX = tiltAngleMax * speedPercent;
+            speedPercent = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude / moveSpeed;
 
-                Quaternion targetVisualRot = Quaternion.Euler(wobbleX, 0, wobbleZ - turnAmount * tiltAngleMax);
-                visualHolder.localRotation = Quaternion.Lerp(visualHolder.localRotation, targetVisualRot, Time.deltaTime * tiltSpeed);
+            // 1. Squash & Stretch Lerping back to Vector3.one
+            visualHolder.localScale = Vector3.Lerp(visualHolder.localScale, targetScale, Time.deltaTime * squashStretchSpeed);
+            targetScale = Vector3.Lerp(targetScale, Vector3.one, Time.deltaTime * squashStretchSpeed);
+
+            // 2. Wobble & Tilt based on movement and tumbling
+            if (!isTumbled)
+            {
+                // Wobble animation over time (cute little waddle)
+                if (speedPercent > 0.1f && isGrounded)
+                {
+                    currentWobbleTime += Time.deltaTime * 15f;
+                    // Side-to-side waddle wobble
+                    float wobbleZ = Mathf.Sin(currentWobbleTime) * 8f * speedPercent;
+                    // Forward tilt when running
+                    float wobbleX = tiltAngleMax * speedPercent;
+
+                    Quaternion targetVisualRot = Quaternion.Euler(wobbleX, 0, wobbleZ - turnAmount * tiltAngleMax);
+                    visualHolder.localRotation = Quaternion.Lerp(visualHolder.localRotation, targetVisualRot, Time.deltaTime * tiltSpeed);
+                }
+                else
+                {
+                    // Idle breathe/wobble
+                    currentWobbleTime += Time.deltaTime * 3f;
+                    float wobbleX = Mathf.Sin(currentWobbleTime) * 2f;
+                    Quaternion targetVisualRot = Quaternion.Euler(wobbleX, 0, 0);
+                    visualHolder.localRotation = Quaternion.Lerp(visualHolder.localRotation, targetVisualRot, Time.deltaTime * tiltSpeed);
+                }
             }
             else
             {
-                // Idle breathe/wobble
-                currentWobbleTime += Time.deltaTime * 3f;
-                float wobbleX = Mathf.Sin(currentWobbleTime) * 2f;
-                Quaternion targetVisualRot = Quaternion.Euler(wobbleX, 0, 0);
-                visualHolder.localRotation = Quaternion.Lerp(visualHolder.localRotation, targetVisualRot, Time.deltaTime * tiltSpeed);
+                // Let physics handle the rotation of the root, visual child aligns to root
+                visualHolder.localRotation = Quaternion.Lerp(visualHolder.localRotation, Quaternion.identity, Time.deltaTime * tiltSpeed);
             }
         }
-        else
+
+        // 3. Animator — pause when not moving, resume when moving
+        if (animator != null)
         {
-            // Let physics handle the rotation of the root, visual child aligns to root
-            visualHolder.localRotation = Quaternion.Lerp(visualHolder.localRotation, Quaternion.identity, Time.deltaTime * tiltSpeed);
+            bool isMoving = speedPercent > 0.1f;
+            animator.speed = isMoving ? 1f : 0f;
         }
     }
 
