@@ -64,10 +64,18 @@ public class LevelGenerator : MonoBehaviour
             levelContainer = containerObj.transform;
         }
 
+        GameObject lastPrefab = null;
+
         for (int i = 0; i < levelLength; i++)
         {
-            // Select a random block prefab
-            GameObject prefab = blockPrefabs[Random.Range(0, blockPrefabs.Length)];
+            // Select a random block prefab, but not the same as the last one
+            GameObject prefab;
+            do
+            {
+                prefab = blockPrefabs[Random.Range(0, blockPrefabs.Length)];
+            } while (prefab == lastPrefab && blockPrefabs.Length > 1);
+            lastPrefab = prefab;
+
             if (prefab == null) continue;
 
             // Position each block sequentially along the Z-axis starting from Z = 0
