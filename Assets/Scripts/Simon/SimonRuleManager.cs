@@ -6,6 +6,9 @@ public class SimonRuleManager : MonoBehaviour
 {
     public static SimonRuleManager Instance { get; private set; }
 
+    [Header("Ball Prefab")]
+    [SerializeField] private GameObject ballPrefab;
+
     private readonly List<ISimonEffect> activeRules = new List<ISimonEffect>();
     private readonly List<RuleType> activeRuleTypes = new List<RuleType>();
     private InputAction resetAction;
@@ -97,5 +100,39 @@ public class SimonRuleManager : MonoBehaviour
             RuleType.Psychedelic => new PsychedelicEffect(ruleDef.floatValue),
             _ => null
         };
+    }
+
+    public void ManyBalls()
+    {
+        if (ballPrefab == null)
+        {
+            Debug.LogWarning("[SimonRuleManager] No ballPrefab assigned!");
+            return;
+        }
+
+        GameObject player = GameObject.Find("PlayerBean");
+        if (player == null) return;
+
+        float playerZ = player.transform.position.z;
+
+        for (int i = 0; i < 100; i++)
+        {
+            Vector3 pos = new Vector3(
+                Random.Range(0f, 8f),
+                8f,
+                playerZ + Random.Range(0f, 15f)
+            );
+
+            GameObject ball = Instantiate(ballPrefab, pos, Random.rotation);
+            ball.name = $"Ball_{i}";
+
+            Rigidbody rb = ball.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.Impulse);
+            }
+        }
+
+        Debug.Log("[SimonRuleManager] Spawned 100 balls!");
     }
 }
