@@ -10,6 +10,7 @@ public class HampterAnimator : MonoBehaviour
     [SerializeField] private string[] talkAnimations;
     [SerializeField] private string tapedAnimation = "Taped";
     [SerializeField] private string deathAnimation = "Lose";
+    [SerializeField] private AudioSource tapeSound;
 
     private string currentAnimation;
 
@@ -30,6 +31,7 @@ public class HampterAnimator : MonoBehaviour
 
     public void StartTaped()
     {
+        tapeSound.Play();
         animator.Play(tapedAnimation);
     }
 

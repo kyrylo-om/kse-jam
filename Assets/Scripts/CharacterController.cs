@@ -76,6 +76,8 @@ public class CharacterController : MonoBehaviour
     private CapsuleCollider capsuleCollider;
     private Camera mainCamera;
 
+    [SerializeField] private AudioSource explodeSound;
+
     // State Variables
     public bool isGrounded;
     public bool isTumbled { get; private set; }
@@ -462,6 +464,7 @@ public class CharacterController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag(winTag))
         {
+            Destroy(collision.gameObject);
             Win();
         }
     }
@@ -500,6 +503,8 @@ public class CharacterController : MonoBehaviour
         {
             Instantiate(deathExplosionPrefab, transform.position, Quaternion.identity);
         }
+
+        explodeSound.Play();
 
         // Hide the visual
         if (visualHolder != null)
@@ -548,11 +553,7 @@ public class CharacterController : MonoBehaviour
             tvObject.SetActive(false);
         }
 
-        // Hide the player visual
-        if (visualHolder != null)
-        {
-            visualHolder.gameObject.SetActive(false);
-        }
+        explodeSound.Play();
 
         // Start win routine
         StartCoroutine(WinRoutine());
@@ -564,10 +565,7 @@ public class CharacterController : MonoBehaviour
         yield return new WaitForSeconds(winStunDuration);
 
         // Quit the application (stops play in Editor)
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+                    UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
 }
